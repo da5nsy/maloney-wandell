@@ -1,45 +1,38 @@
-function [illuminant, surfaceArray] = maloneywandell(lightBasis, surfaceBasis, sensorResponseCurves, sensorResponses)
+function [E, surfArray] = maloneywandell(lightB, surfB, sensorResCur, sensorRes)
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % Michael Harris, michael.harris@uea.ac.uk
     % University of East Anglia, Norwich, UK
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    % modified by Han Gong, gong@fedoraproject.org
     
     % Find nullspace of sensor responses, which gives the normal of the
     % plane in the illuminant space
-    illuminantPlaneNormal = null(sensorResponses);
+    EPlaneNorm = null(sensorRes); % null of a nx3 matrix
 
-    
-    % Create a known surface from each basis function individually, then
-    % whatever values simultaneously map these surfaces onto the illuminant
-    % plane will be the values for epsilon, for 2 surface basis functions
-    % this could be written as:
-    %
-    % baseSurface1 = (repmat(surfaceBasis(:,1),1 ,3) .*lightBasis)' * sensorResponseCurves;
-    % baseSurface2 = (repmat(surfaceBasis(:,2),1 ,3) .*lightBasis)' * sensorResponseCurves;
-    % epsilon = null([baseSurface1 * illuminantPlaneNormal,  baseSurface2 * illuminantPlaneNormal]');
-    
-    baseSurfaces = zeros(size(surfaceBasis, 2), size(sensorResponseCurves,2));
-    for i = 1 : size(surfaceBasis, 2)
-        baseSurfaces(i,:) =  (repmat(surfaceBasis(:,i),1 ,size(lightBasis,2)) .*lightBasis)' * sensorResponseCurves * illuminantPlaneNormal;
+    baseSurf = zeros(size(surfB,2), size(sensorResCur,2)); % NxP
+    for i = 1:size(surfB,2)
+        tmp = (repmat(surfB(:,i),1,size(lightB,2)).*lightB)' * sensorResCur; % integrate ESR
+        baseSurf(i,:) = tmp * EPlaneNorm; 
     end
     
-    epsilon = null(baseSurfaces);
+    epsilon = null(baseSurf);
     
-    % The estimate for the illuminant
-    illuminant = lightBasis * epsilon;
+    % The estimate for the illuminant (basis * weights)
+    E = lightB * epsilon;
 
     % Create the lighting matrix using the illuminant estimate
-    lightingMatrix = zeros(size(lightBasis,2),size(surfaceBasis,2));
-    for k = 1:size(lightBasis,2)
-        for j = 1:size(surfaceBasis,2)
-            lightingMatrix(k,j) = sum(illuminant.*surfaceBasis(:,j).*sensorResponseCurves(:,k));
+    lightM = zeros(size(lightB,2),size(surfB,2)); % \Lambda PxN
+    for k = 1:size(lightB,2)
+        for j = 1:size(surfB,2)
+            lightM(k,j) = sum(E.*surfB(:,j).*sensorResCur(:,k)); % integration ESR
         end
     end
 
     % Convert sensor responses into sigma values
-    surfaceArray = zeros(size(surfaceBasis, 1), size(sensorResponses, 1));
-    for i = 1:size(sensorResponses, 1)
-        surfaceArray(:,i) = surfaceBasis * (lightingMatrix\sensorResponses(i,:)');
+    surfArray = zeros(size(surfB, 1), size(sensorRes, 1)); % 31xn
+    for i = 1:size(sensorRes, 1)
+        surfArray(:,i) = surfB * (lightM\sensorRes(i,:)');
     end
-    
+
 end
