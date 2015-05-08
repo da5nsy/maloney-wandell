@@ -2,34 +2,34 @@ clear all;
 load data/GRA31
 load data/surfs1995
 
-%%%% THESE CAN BE ADJUSTED TO TEST %%%
+%%%% configration  %%
 nSensors = 3; % number of sensors
 nSurfaces = 9; % number of surfaces reflectances to solve
+nSurft = 5; % number of test surfaces for blending
 nLight = 3; % number of ambient light basis (nLight < nSurfaces)
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%
 
-if nSensors < 3 || nSensors > 4
-    throw(MException('ResultChk:OutOfRange', ...
-        'Test data is only available for 3 or 4 sensors'));
-end
-
-if nSensors == 3
+switch nSensors
+case 3
     load data/RGB
     sensorResCur = RGB;
-end
-
-if nSensors ==4
+case 4
     load data/sensor4
     sensorResCur = sensor4;
+otherwise
+    throw(MException('ResultChk:OutOfRange', ...
+        'Test data is only available for 3 or 4 sensors'));
 end
 
 % Select some random bases
 lightB = GRA31(:,randperm(size(GRA31, 2), nLight)); % ambient light 31xN
 surfB = surfs1995(:,randperm(size(surfs1995, 2), nSensors-1)); % reflectance 31xP
+surfBt = surfs1995(:,randperm(size(surfs1995, 2), nSensors-1)); % surface for test
 
 % Create an illuminant and some surfaces from the basis functions with random weights
 trueIllum = lightB*rand(size(lightB, 2),1); % 31x1
 trueSurfA = surfB*rand(size(surfB, 2),nSurfaces); % 31xn
+%trueSurfA = surfBt*rand(size(surfBt, 2),nSurfaces); % 31xn
 
 % Generate sensors responses from illuminant and surfaces
 sensorRes = (repmat(trueIllum, 1, nSurfaces).*trueSurfA)' * sensorResCur; % nx3
@@ -55,7 +55,7 @@ for i = 1:nSurfaces
     legend('True','Est.');
 end
 
-figure;
+figure('Name','Recovery Visualisation');
 Eim = reshape(sensorRes,[3,ceil(nSurfaces/3),3]);
 Sim = reshape(surfRes,[3,ceil(nSurfaces/3),3]);
 eEim = reshape(EsensorRes,[3,ceil(nSurfaces/3),3]);
