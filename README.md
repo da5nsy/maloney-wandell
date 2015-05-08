@@ -2,7 +2,7 @@ This is a Matlab/Octave implementation of Maloney & Wandell's colour constancy a
 
 Copyright 2015 Han Gong <gong@fedoraproject.org>, University of East Anglia
 
-Copyright 2014 Michael Harris <michael.harris@uea.ac.uk>, University of East Anglia
+Copyright 2011 Michael Harris <michael.harris@uea.ac.uk>, University of East Anglia
 
 Code: see Demo.m for test.
 
