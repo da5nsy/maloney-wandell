@@ -1,7 +1,10 @@
 This is a Matlab/Octave implementation of Maloney & Wandell's colour constancy algorithm.
 
 Copyright 2015 Han Gong <gong@fedoraproject.org>, University of East Anglia
+
 Copyright 2014 Michael Harris <michael.harris@uea.ac.uk>, University of East Anglia
+
+Code: see Demo.m for test.
 
 References:
     L.T. Maloney and B.A. Wandell, "Color Constancy: A Method for Recovering Surface
