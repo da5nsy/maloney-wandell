@@ -5,6 +5,7 @@ Edited by Danny Garside 2019
 Comments:
 1. I am confused because, from my understanding, this should reconstruct the data perfectly, and it instead only does a moderately OK job.
 2. I have updated this script to use biologically plausible data (from [PsychToolbox](https://github.com/Psychtoolbox-3/Psychtoolbox-3)). This makes little difference, apart from meaning that the basis functions are the same each time, and so the results look similar each time.
+3. Han Gong's second figure isn't working currently. I have not explored why.
 
 --------
 
