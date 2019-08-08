@@ -1,4 +1,4 @@
-function [E, surfArray] = maloneywandell(lightB, surfB, sensorResCur, sensorRes)
+function [E, surfArray, epsilon] = maloneywandell(lightB, surfB, sensorResCur, sensorRes)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Modified by Han Gong, gong@fedoraproject.org
 % University of East Anglia, Norwich, UK
