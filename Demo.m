@@ -19,7 +19,7 @@ case 3
     %load data/RGB
     %sensorResCur = RGB;
 case 4
-    load T_melanop
+    load data/sensor4
     sensorResCur = sensor4;
 otherwise
     throw(MException('ResultChk:OutOfRange', ...
