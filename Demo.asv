@@ -14,10 +14,10 @@ nSurfaces = 9; % number of surfaces reflectances to solve
 
 switch nSensors
 case 3
-    load T_cones_ss10.mat
-    sensorResCur = SplineCmf(S_cones_ss10,T_cones_ss10,S_cieday,1)';
-    %load data/RGB
-    %sensorResCur = RGB;
+    %load T_cones_ss10.mat
+    %sensorResCur = SplineCmf(S_cones_ss10,T_cones_ss10,S_cieday)';
+    load data/RGB
+    sensorResCur = RGB;
 case 4
     load T_melanop
     sensorResCur = sensor4;
@@ -34,6 +34,7 @@ surfB = B_vrhel(:,1:nSensors-1);
 % Create an illuminant and some surfaces from the basis functions with random weights
 trueIllum = lightB*rand(size(lightB, 2),1); % 31x1
 trueSurfA = surfB*rand(size(surfB, 2),nSurfaces); % 31xn
+%trueSurfA = surfBt*rand(size(surfBt, 2),nSurfaces); % 31xn
 
 % Generate sensors responses from illuminant and surfaces
 sensorRes = (repmat(trueIllum, 1, nSurfaces).*trueSurfA)' * sensorResCur; % nx3
